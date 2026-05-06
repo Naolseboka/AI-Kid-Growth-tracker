@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI Kid Growth Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0c12;--bg2:#14141e;--bg3:#1b1b27;--bg4:#222230;
+  --bd:#2a2a3a;--bd2:#38384a;
+  --tx:#eeeef5;--tx2:#9898b0;--tx3:#606078;
+  --pu:#a78bfa;--pu2:#7c3aed;--pu3:#ede9fe;
+  --gn:#34d399;--gn2:#059669;--gn3:#a7f3d0;
+  --am:#fbbf24;--am2:#b45309;--am3:#fde68a;
+  --rd:#f87171;--rd2:#dc2626;
+  --bl:#60a5fa;--bl2:#1d4ed8;
+  --pk:#f472b6;--pk2:#be185d;
+  --r:14px;--r2:9px;--r3:20px;
+  --sh:0 2px 16px rgba(0,0,0,.5);
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;font-size:14px}
+.wrap{max-width:920px;margin:0 auto;padding:14px 12px 40px}
+
+/* HEADER */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r3);margin-bottom:14px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-box{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--pu2),var(--pk2));display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.logo-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;letter-spacing:-.3px}
+.logo-title span{color:var(--pu)}
+.logo-sub{font-size:10px;color:var(--tx3);font-weight:600;margin-top:1px}
+.hdr-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.streak-pill{background:#2a1f00;border:1px solid var(--am2);color:var(--am);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:800}
+.btn{padding:6px 13px;border-radius:var(--r2);border:1px solid var(--bd2);background:var(--bg3);color:var(--tx);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .18s}
+.btn:hover{background:var(--bg4)}
+.btn-pu{background:var(--pu2);border-color:var(--pu);color:#fff}.btn-pu:hover{background:#6d28d9}
+.btn-gn{background:var(--gn2);border-color:var(--gn);color:#fff}.btn-gn:hover{background:#047857}
+.btn-sm{padding:4px 10px;font-size:11px}
+.g-badge{padding:4px 10px;border-radius:20px;background:#1a0e00;border:1px solid #f97316;color:#f97316;font-size:11px;font-weight:800}
+
+/* NAV */
+.nav{display:flex;gap:3px;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r3);padding:5px;margin-bottom:14px;overflow-x:auto}
+.nav::-webkit-scrollbar{height:0}
+.nt{flex:1;min-width:80px;padding:8px 6px;border-radius:11px;border:none;background:transparent;color:var(--tx2);font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all .18s;text-align:center;white-space:nowrap}
+.nt.on{background:var(--pu2);color:#fff}
+.nt:hover:not(.on){background:var(--bg3);color:var(--tx)}
+
+/* STAT CARDS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.sc{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:14px 12px;text-align:center;position:relative;overflow:hidden;transition:transform .2s}
+.sc:hover{transform:translateY(-2px)}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0}
+.sc.pu::before{background:linear-gradient(90deg,var(--pu),var(--pk))}
+.sc.gn::before{background:linear-gradient(90deg,var(--gn),var(--bl))}
+.sc.am::before{background:linear-gradient(90deg,var(--am),var(--rd))}
+.sc.bl::before{background:linear-gradient(90deg,var(--bl),var(--pu))}
+.sv{font-size:26px;font-weight:900;line-height:1.1;margin-bottom:2px}
+.sl{font-size:10px;color:var(--tx3);font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+.ss{font-size:10px;color:var(--tx2);margin-top:3px}
+
+/* LEVEL */
+.lv-sec{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.lv-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.lv-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--pu3)}
+.lv-xp{font-size:12px;color:var(--tx2);margin-top:2px}
+.pb{height:11px;background:var(--bg4);border-radius:20px;overflow:hidden;margin-bottom:8px}
+.pbf{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--pu2),var(--pk));transition:width .6s cubic-bezier(.34,1.56,.64,1)}
+.lv-ms{display:flex;justify-content:space-between}
+.ms{font-size:10px;color:var(--tx3);font-weight:700}
+.ms.on{color:var(--pu)}
+.next-lvl{font-size:11px;color:var(--pu);background:#1e1030;border:1px solid var(--pu2);padding:3px 10px;border-radius:20px}
+
+/* WEEKLY */
+.wk-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px}
+.dc{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r2);padding:8px 4px;text-align:center;position:relative}
+.dc.td{border-color:var(--pu);box-shadow:0 0 0 1px var(--pu2)}
+.dc.ok{background:#0d2018;border-color:var(--gn2)}
+.dn{font-size:9px;color:var(--tx3);font-weight:700;margin-bottom:3px;text-transform:uppercase}
+.dp{font-size:14px;font-weight:900}
+.dc.ok .dp{color:var(--gn)}
+.dc.td .dp{color:var(--pu)}
+.dbar{height:36px;background:var(--bg4);border-radius:4px;margin-top:5px;display:flex;align-items:flex-end;overflow:hidden;position:relative}
+.dbf{width:100%;border-radius:4px;background:linear-gradient(180deg,var(--pu),var(--pk));transition:height .4s ease}
+
+/* TASKS */
+.tasks-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.tc{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;user-select:none}
+.tc:hover{border-color:var(--bd2);transform:translateY(-2px);box-shadow:var(--sh)}
+.tc:active{transform:scale(.98)}
+.tc.done{border-color:var(--gn2);background:linear-gradient(135deg,#0c1f15,var(--bg2))}
+.tc.done::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top right,#34d39910,transparent 70%)}
+.tt{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.te{font-size:26px;line-height:1}
+.tpt{background:var(--bg4);border:1px solid var(--bd);padding:2px 8px;border-radius:20px;font-size:10px;font-weight:800;color:var(--am)}
+.tn{font-size:13px;font-weight:800;margin-bottom:2px}
+.td2{font-size:11px;color:var(--tx2)}
+.tb{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.tck{width:22px;height:22px;border-radius:50%;border:2px solid var(--bd2);display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s;flex-shrink:0}
+.tc.done .tck{background:var(--gn);border-color:var(--gn);color:#fff;transform:scale(1.1)}
+.ts2{font-size:10px;color:var(--gn);font-weight:800}
+.full-task{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .18s;margin-bottom:8px}
+.full-task:hover{border-color:var(--bd2);transform:translateX(2px)}
+.full-task.done{border-color:var(--gn2);background:#0c1f15}
+.ft-em{font-size:28px;flex-shrink:0}
+.ft-info{flex:1}
+.ft-meta{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap}
+
+/* SMART INPUT */
+.si-box{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.si-label{font-size:12px;font-weight:800;color:var(--pu3);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.si-row{display:flex;gap:8px}
+.si-in{flex:1;padding:10px 14px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r2);color:var(--tx);font-family:'Nunito',sans-serif;font-size:13px;outline:none;transition:border .18s}
+.si-in:focus{border-color:var(--pu)}
+.si-in::placeholder{color:var(--tx3)}
+.si-res{margin-top:10px;font-size:12px;min-height:0;transition:all .2s}
+
+/* AI COACH */
+.ai-box{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.ai-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.ai-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--pu2),var(--bl2));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ai-lab{font-size:13px;font-weight:800}
+.ai-sub{font-size:10px;color:var(--tx2)}
+.ai-in{width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r2);color:var(--tx);font-family:'Nunito',sans-serif;font-size:13px;outline:none;margin-bottom:10px;transition:border .18s}
+.ai-in:focus{border-color:var(--pu)}
+.ai-in::placeholder{color:var(--tx3)}
+.ai-resp{background:var(--bg3);border:1px solid var(--bd2);border-radius:var(--r2);padding:14px;font-size:13px;line-height:1.65;color:var(--tx2);min-height:70px}
+.tip{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--bd)}
+.tip:last-child{padding-bottom:0;border-bottom:none}
+.ti{font-size:16px;flex-shrink:0;margin-top:1px}
+.thinking{display:flex;align-items:center;gap:5px;color:var(--tx3);font-size:12px}
+.d{width:6px;height:6px;border-radius:50%;background:var(--pu);animation:bop 1.2s infinite}
+.d:nth-child(2){animation-delay:.2s}.d:nth-child(3){animation-delay:.4s}
+@keyframes bop{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}}
+
+/* READING */
+.form-inp{width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r2);color:var(--tx);font-family:'Nunito',sans-serif;font-size:13px;outline:none;transition:border .18s}
+.form-inp:focus{border-color:var(--pu)}
+.form-inp::placeholder{color:var(--tx3)}
+textarea.form-inp{resize:vertical;min-height:80px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.re-entry{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r2);padding:12px;margin-bottom:8px;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.re-top{display:flex;justify-content:space-between;align-items:center}
+.re-book{font-size:13px;font-weight:700}
+.re-meta{font-size:10px;color:var(--tx3)}
+.re-sum{font-size:12px;color:var(--tx2);margin-top:6px;line-height:1.55}
+.rscore{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;margin-top:6px}
+.rscore.good{background:#0c2a1a;color:var(--gn);border:1px solid var(--gn2)}
+.rscore.ok{background:#2a1e00;color:var(--am);border:1px solid var(--am2)}
+.rscore.low{background:#2a0e0e;color:var(--rd);border:1px solid var(--rd2)}
+
+/* REWARDS */
+.rw-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r2);border:1px solid var(--bd);margin-bottom:8px;transition:all .2s}
+.rw-item.ul{border-color:var(--gn2);background:linear-gradient(90deg,#0c1f15,var(--bg2))}
+.rw-item.pt{border-color:var(--am2);background:linear-gradient(90deg,#1f1700,var(--bg2))}
+.rw-item.lk{border-color:var(--bd);background:var(--bg3)}
+.rw-icon{font-size:24px;width:38px;text-align:center}
+.rw-info{flex:1}
+.rw-name{font-size:13px;font-weight:700}
+.rw-req{font-size:10px;color:var(--tx2);margin-top:2px}
+.rw-badge{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;white-space:nowrap}
+.rw-badge.ul{background:#0c2a1a;color:var(--gn);border:1px solid var(--gn2)}
+.rw-badge.pt{background:#2a1e00;color:var(--am);border:1px solid var(--am2)}
+.rw-badge.lk{background:var(--bg4);color:var(--tx3);border:1px solid var(--bd)}
+.laptop-status{margin-top:12px;padding:12px 16px;border-radius:var(--r2);font-size:13px;font-weight:700;text-align:center}
+.ls-full{background:#0c2a1a;color:var(--gn);border:1px solid var(--gn2)}
+.ls-part{background:#2a1e00;color:var(--am);border:1px solid var(--am2)}
+.ls-lock{background:#2a0e0e;color:var(--rd);border:1px solid var(--rd2)}
+
+/* GUARDIAN */
+.g-panel{background:var(--bg2);border:2px solid #f97316;border-radius:var(--r);padding:16px;margin-bottom:14px}
+.g-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.g-av{width:38px;height:38px;border-radius:50%;background:#1a0e00;border:2px solid #f97316;display:flex;align-items:center;justify-content:center;font-size:18px}
+.g-title{font-size:14px;font-weight:800;color:#f97316}
+.g-ctrls{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g-ctrl{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r2);padding:12px}
+.g-cl{font-size:10px;color:var(--tx2);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.adj{display:flex;align-items:center;gap:8px}
+.adj-btn{width:30px;height:30px;border-radius:var(--r2);border:1px solid var(--bd2);background:var(--bg4);color:var(--tx);cursor:pointer;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1}
+.adj-btn:hover{background:var(--bg3);border-color:var(--pu)}
+.adj-val{font-size:20px;font-weight:900;min-width:42px;text-align:center}
+.g-report{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r2);padding:14px;font-size:13px;line-height:1.7;color:var(--tx2)}
+.g-report .rline{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.g-report .rline:last-child{margin-bottom:0}
+
+/* HISTORY */
+.hist-entry{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r2);padding:12px;margin-bottom:8px}
+.hist-top{display:flex;justify-content:space-between;align-items:center}
+.hist-date{font-size:12px;font-weight:700}
+.hist-pts{font-size:12px;color:var(--pu);font-weight:800}
+.hist-tasks{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.hist-tag{background:var(--bg3);border:1px solid var(--bd);padding:2px 7px;border-radius:20px;font-size:10px;color:var(--tx2)}
+.hist-tag.done{background:#0c1f15;border-color:var(--gn2);color:var(--gn)}
+
+/* CONFETTI / TOAST */
+.confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden}
+.cp{position:absolute;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{0%{opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
+.toast{position:fixed;bottom:20px;right:20px;max-width:280px;background:var(--bg2);border:1px solid var(--gn2);border-radius:var(--r);padding:11px 16px;font-size:13px;font-weight:700;color:var(--gn);z-index:10000;animation:tin .3s cubic-bezier(.34,1.56,.64,1);box-shadow:var(--sh)}
+@keyframes tin{from{transform:translateX(120%);opacity:0}to{transform:none;opacity:1}}
+.toast.warn{border-color:var(--am2);color:var(--am)}
+.toast.err{border-color:var(--rd2);color:var(--rd)}
+
+/* MISC */
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.sec-ttl{font-size:14px;font-weight:800}
+.empty{color:var(--tx3);font-style:italic;text-align:center;padding:20px;font-size:13px}
+.tag{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
+.tag-pu{background:#1e1030;color:var(--pu);border:1px solid var(--pu2)}
+.tag-gn{background:#0c2a1a;color:var(--gn);border:1px solid var(--gn2)}
+.tag-am{background:#2a1e00;color:var(--am);border:1px solid var(--am2)}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+
+@media(max-width:580px){
+  .stats{grid-template-columns:1fr 1fr}
+  .tasks-grid{grid-template-columns:1fr}
+  .fr{grid-template-columns:1fr}
+  .g-ctrls{grid-template-columns:1fr}
+  .nt{min-width:60px;font-size:10px}
+  .sv{font-size:20px}
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="logo">
+    <div class="logo-box">⚡</div>
+    <div>
+      <div class="logo-title">Kid<span>Growth</span> AI</div>
+      <div class="logo-sub">Smart Discipline Tracker</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="streak-pill" id="streak-pill">0🔥 streak</div>
+    <button class="btn btn-sm" id="theme-btn" onclick="toggleTheme()">☀️ Light</button>
+    <button class="btn btn-sm" id="g-toggle-btn" onclick="goGuardian()">🔒 Guardian</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nt on" data-tab="dash" onclick="showTab('dash',this)">📊 Dashboard</button>
+  <button class="nt" data-tab="tasks" onclick="showTab('tasks',this)">✅ Tasks</button>
+  <button class="nt" data-tab="coach" onclick="showTab('coach',this)">🤖 AI Coach</button>
+  <button class="nt" data-tab="reading" onclick="showTab('reading',this)">📚 Reading</button>
+  <button class="nt" data-tab="rewards" onclick="showTab('rewards',this)">🏆 Rewards</button>
+  <button class="nt" data-tab="history" onclick="showTab('history',this)">📅 History</button>
+  <button class="nt" data-tab="guardian" onclick="showTab('guardian',this)">🛡️ Guardian</button>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div id="tab-dash">
+  <div class="stats">
+    <div class="sc pu"><div class="sv" id="s-pts" style="color:var(--pu)">0</div><div class="sl">Today's Pts</div><div class="ss">Goal: 6</div></div>
+    <div class="sc gn"><div class="sv" id="s-done" style="color:var(--gn)">0/5</div><div class="sl">Tasks Done</div><div class="ss">Today</div></div>
+    <div class="sc am"><div class="sv" id="s-streak" style="color:var(--am)">0🔥</div><div class="sl">Day Streak</div><div class="ss">Keep it up!</div></div>
+    <div class="sc bl"><div class="sv" id="s-wkly" style="color:var(--bl)">0</div><div class="sl">Weekly Pts</div><div class="ss">Goal: 42</div></div>
+  </div>
+
+  <div class="lv-sec">
+    <div class="lv-hdr">
+      <div>
+        <div class="lv-name" id="lv-name">⭐ Beginner</div>
+        <div class="lv-xp" id="lv-xp">0 XP earned</div>
+      </div>
+      <div class="next-lvl" id="lv-next">30 XP to Explorer</div>
+    </div>
+    <div class="pb"><div class="pbf" id="lv-bar" style="width:0%"></div></div>
+    <div class="lv-ms">
+      <span class="ms on" id="ms1">Beginner</span>
+      <span class="ms" id="ms2">Explorer</span>
+      <span class="ms" id="ms3">Achiever</span>
+      <span class="ms" id="ms4">Champion</span>
+      <span class="ms" id="ms5">Elite</span>
+    </div>
+  </div>
+
+  <div class="sec-hdr">
+    <div class="sec-ttl">📅 This Week</div>
+    <div style="font-size:12px;color:var(--tx2)" id="wk-label">0 / 42 pts</div>
+  </div>
+  <div class="wk-grid" id="wk-grid"></div>
+
+  <div class="sec-hdr">
+    <div class="sec-ttl">⚡ Today's Tasks</div>
+    <button class="btn btn-sm" onclick="showTab('tasks',document.querySelector('[data-tab=tasks]'))">View all →</button>
+  </div>
+  <div class="tasks-grid" id="dash-tasks"></div>
+
+  <div class="sec-hdr" style="margin-top:6px">
+    <div class="sec-ttl">🏆 Reward Status</div>
+    <button class="btn btn-sm" onclick="showTab('rewards',document.querySelector('[data-tab=rewards]'))">Details →</button>
+  </div>
+  <div id="dash-laptop-status"></div>
+</div>
+
+<!-- ══════════ TASKS ══════════ -->
+<div id="tab-tasks" style="display:none">
+  <div class="si-box">
+    <div class="si-label">✨ Smart Input — describe what you did</div>
+    <div class="si-row">
+      <input class="si-in" id="si-input" placeholder='e.g. "I studied math for 20 minutes"' onkeydown="if(event.key==='Enter')doSmartParse()">
+      <button class="btn btn-pu" onclick="doSmartParse()">Parse ✦</button>
+    </div>
+    <div class="si-res" id="si-res"></div>
+  </div>
+
+  <div class="sec-hdr">
+    <div class="sec-ttl">✅ Task List</div>
+    <button class="btn btn-sm" onclick="resetToday()">↺ Reset Today</button>
+  </div>
+  <div id="all-tasks"></div>
+</div>
+
+<!-- ══════════ AI COACH ══════════ -->
+<div id="tab-coach" style="display:none">
+  <div class="ai-box">
+    <div class="ai-hdr">
+      <div class="ai-av">🤖</div>
+      <div>
+        <div class="ai-lab">Personal AI Coach</div>
+        <div class="ai-sub">Powered by Claude · Personalized to your progress</div>
+      </div>
+      <button class="btn btn-pu btn-sm" onclick="doAutoCoach()" style="margin-left:auto;white-space:nowrap">Analyze Me ✦</button>
+    </div>
+    <input class="ai-in" id="coach-q" placeholder="Ask anything — study tips, motivation, how to improve..." onkeydown="if(event.key==='Enter')doAskCoach()">
+    <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+      <button class="btn btn-pu btn-sm" onclick="doAskCoach()">Ask Coach ✦</button>
+      <button class="btn btn-sm" onclick="doQuickPrompt('What should I focus on today?')">Today focus</button>
+      <button class="btn btn-sm" onclick="doQuickPrompt('Give me a study tip')">Study tip</button>
+      <button class="btn btn-sm" onclick="doQuickPrompt('How can I build better habits?')">Build habits</button>
+    </div>
+    <div class="ai-resp" id="coach-resp"><div style="color:var(--tx3);font-style:italic">Click "Analyze Me" for personalized coaching, or ask anything above!</div></div>
+  </div>
+</div>
+
+<!-- ══════════ READING ══════════ -->
+<div id="tab-reading" style="display:none">
+  <div class="ai-box">
+    <div style="font-size:13px;font-weight:800;margin-bottom:14px;color:var(--pu3)">📚 Log a Reading Session</div>
+    <div class="fr">
+      <input class="form-inp" id="r-book" placeholder="Book title...">
+      <input class="form-inp" id="r-pages" type="number" placeholder="Pages read" min="1">
+    </div>
+    <textarea class="form-inp" id="r-summary" placeholder="Write a short summary — what happened, what did you learn? (AI will evaluate it!)" style="margin-bottom:10px"></textarea>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-pu" onclick="doLogReading()">📖 Log Session</button>
+      <button class="btn" onclick="doEvalSummary()">🤖 Evaluate Summary</button>
+    </div>
+    <div id="r-eval" style="margin-top:10px;font-size:12px;color:var(--tx2)"></div>
+  </div>
+  <div class="sec-hdr">
+    <div class="sec-ttl">📖 Reading Log</div>
+    <div id="r-total" style="font-size:12px;color:var(--tx2)"></div>
+  </div>
+  <div id="r-logs"></div>
+</div>
+
+<!-- ══════════ REWARDS ══════════ -->
+<div id="tab-rewards" style="display:none">
+  <div class="ai-box" style="margin-bottom:14px">
+    <div class="sec-hdr" style="margin-bottom:12px">
+      <div class="sec-ttl">🏆 Reward Engine</div>
+      <div style="font-size:13px;color:var(--tx2)">Weekly: <span id="r-wkly" style="color:var(--pu);font-weight:800">0</span> pts · Today: <span id="r-today" style="color:var(--am);font-weight:800">0</span> pts</div>
+    </div>
+    <div id="rewards-list"></div>
+  </div>
+  <div class="ai-box">
+    <div style="font-size:13px;font-weight:800;margin-bottom:10px;color:var(--am3)">💻 Laptop Time Policy</div>
+    <div style="font-size:13px;color:var(--tx2);line-height:1.8">
+      <div>🟢 <strong>25+ weekly pts</strong> → Full access · 2 days/week</div>
+      <div>🟡 <strong>15–24 weekly pts</strong> → Partial · 1 day, max 1 hour</div>
+      <div>🔴 <strong>Under 15 pts</strong> → Locked · Focus on your tasks first!</div>
+    </div>
+    <div id="laptop-status-full" class="laptop-status"></div>
+  </div>
+</div>
+
+<!-- ══════════ HISTORY ══════════ -->
+<div id="tab-history" style="display:none">
+  <div class="sec-hdr">
+    <div class="sec-ttl">📅 Daily History</div>
+    <button class="btn btn-sm" onclick="clearHistory()">Clear All</button>
+  </div>
+  <div id="hist-list"></div>
+</div>
+
+<!-- ══════════ GUARDIAN ══════════ -->
+<div id="tab-guardian" style="display:none">
+  <div id="g-locked" style="text-align:center;padding:50px 20px">
+    <div style="font-size:56px;margin-bottom:12px">🔐</div>
+    <div style="font-size:17px;font-weight:800;margin-bottom:6px">Guardian Mode</div>
+    <div style="font-size:13px;color:var(--tx2);margin-bottom:18px">Parents &amp; guardians: manage, override, and review progress</div>
+    <button class="btn btn-pu" onclick="unlockGuardian()">🔓 Unlock (PIN: 1234)</button>
+  </div>
+  <div id="g-open" style="display:none">
+    <div class="g-panel">
+      <div class="g-hdr">
+        <div class="g-av">🛡️</div>
+        <div>
+          <div class="g-title">Guardian Control Panel</div>
+          <div style="font-size:10px;color:var(--tx2)">Override · Approve · Manage</div>
+        </div>
+        <div class="g-badge" style="margin-left:auto">GUARDIAN</div>
+      </div>
+      <div class="g-ctrls">
+        <div class="g-ctrl">
+          <div class="g-cl">Today's Bonus Points</div>
+          <div class="adj">
+            <button class="adj-btn" onclick="adjBonus(-1)">−</button>
+            <div class="adj-val" id="g-bonus">0</div>
+            <button class="adj-btn" onclick="adjBonus(1)">+</button>
+          </div>
+        </div>
+        <div class="g-ctrl">
+          <div class="g-cl">Weekly Bonus XP</div>
+          <div class="adj">
+            <button class="adj-btn" onclick="adjWkBonus(-5)">−</button>
+            <div class="adj-val" id="g-wkbonus">0</div>
+            <button class="adj-btn" onclick="adjWkBonus(5)">+</button>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn" style="flex:1;min-width:120px" onclick="doResetWeek()">🔄 Reset Week</button>
+        <button class="btn btn-gn" style="flex:1;min-width:120px" onclick="doApproveAll()">✅ Approve All</button>
+        <button class="btn btn-sm" style="border-color:var(--rd2);color:var(--rd)" onclick="lockGuardian()">🔒 Lock</button>
+      </div>
+    </div>
+    <div class="sec-hdr"><div class="sec-ttl">📊 Guardian Report</div></div>
+    <div class="g-report" id="g-report"></div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+<div class="confetti-wrap" id="cfwrap"></div>
+
+<script>
+// ──────────────────────────────────────────
+// CONSTANTS
+// ──────────────────────────────────────────
+const TASKS = [
+  {id:'study',   name:'Study Session', desc:'Math, Science, or any school subject', emoji:'📖', pts:2, cat:'academic'},
+  {id:'reading', name:'Reading',        desc:'Read a book for at least 20 min',      emoji:'📚', pts:1, cat:'habit'},
+  {id:'exercise',name:'Exercise',       desc:'Physical activity or sport',            emoji:'🏃', pts:1, cat:'health'},
+  {id:'behavior',name:'Good Behavior',  desc:'Be kind, respectful, helpful',          emoji:'😊', pts:1, cat:'character'},
+  {id:'chores',  name:'Chores',         desc:'Help around the house',                 emoji:'🧹', pts:1, cat:'responsibility'},
+];
+
+const LEVELS = [
+  {name:'⭐ Beginner', min:0,   max:30,  next:'Explorer'},
+  {name:'🔍 Explorer', min:30,  max:80,  next:'Achiever'},
+  {name:'🎯 Achiever', min:80,  max:150, next:'Champion'},
+  {name:'🏆 Champion', min:150, max:250, next:'Elite'},
+  {name:'⚡ Elite',    min:250, max:9999,next:''},
+];
+
+const REWARDS = [
+  {name:'30 Min Free Time',    desc:'Any screen-free activity you choose', emoji:'🎮', req:5,  type:'today'},
+  {name:'Favorite Snack',      desc:'Pick any snack',                       emoji:'🍕', req:4,  type:'today'},
+  {name:'Stay Up 30 Min Late', desc:'Weekend only',                          emoji:'🌙', req:18, type:'weekly'},
+  {name:'Movie Night Pick',    desc:'You choose the movie',                  emoji:'🎬', req:22, type:'weekly'},
+  {name:'Full Laptop Day',     desc:'2 days/week laptop access',             emoji:'💻', req:25, type:'weekly'},
+  {name:'Special Outing',      desc:'Park, ice cream, or adventure trip',    emoji:'🚀', req:35, type:'weekly'},
+];
+
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+// ──────────────────────────────────────────
+// STATE
+// ──────────────────────────────────────────
+const today     = new Date();
+const todayIdx  = today.getDay();
+const todayStr  = today.toDateString();
+
+let S = JSON.parse(localStorage.getItem('kgt_v3') || 'null') || {
+  tasks:{}, weeklyPts:[0,0,0,0,0,0,0],
+  totalXP:0, streak:0, lastDate:null,
+  bonusPts:0, wkBonus:0,
+  guardianOpen:false, lightMode:false,
+  readingLogs:[], history:[],
+};
+
+// Streak check on load
+(function(){
+  if(S.lastDate && S.lastDate !== todayStr){
+    const last = new Date(S.lastDate);
+    const diff = Math.round((today - last) / 86400000);
+    if(diff === 1 && todayPts() >= 4){ S.streak = (S.streak||0)+1; }
+    else if(diff > 1){ S.streak = 0; }
+  }
+  if(!S.lastDate) S.lastDate = todayStr;
+})();
+
+save();
+
+function save(){ localStorage.setItem('kgt_v3', JSON.stringify(S)); }
+
+// ──────────────────────────────────────────
+// COMPUTED
+// ──────────────────────────────────────────
+function todayPts(){
+  return TASKS.reduce((s,t) => s + (S.tasks[t.id] ? t.pts : 0), 0) + (S.bonusPts || 0);
+}
+function weeklyPts(){
+  return S.weeklyPts.reduce((a,b) => a+b, 0) + (S.wkBonus || 0);
+}
+function doneTasks(){
+  return TASKS.filter(t => S.tasks[t.id]);
+}
+function getLevel(){
+  const xp = S.totalXP || 0;
+  return LEVELS.find(l => xp >= l.min && xp < l.max) || LEVELS[LEVELS.length-1];
+}
+function xpPct(){
+  const lv = getLevel();
+  if(lv.max === 9999) return 100;
+  return Math.min(100, Math.round(((S.totalXP - lv.min) / (lv.max - lv.min)) * 100));
+}
+
+// ──────────────────────────────────────────
+// UI UPDATE
+// ──────────────────────────────────────────
+function qs(sel){ return document.querySelector(sel); }
+function setIf(sel, val){ const el = qs(sel); if(el) el.textContent = val; }
+
+function updateUI(){
+  const pts = todayPts();
+  const wk  = weeklyPts();
+  const lv  = getLevel();
+  const dn  = doneTasks().length;
+  const xp  = S.totalXP || 0;
+
+  setIf('#s-pts',    pts);
+  setIf('#s-done',   dn + '/' + TASKS.length);
+  setIf('#s-streak', (S.streak||0) + '🔥');
+  setIf('#s-wkly',   wk);
+  setIf('#streak-pill', (S.streak||0) + '🔥 streak');
+  setIf('#lv-name',  lv.name);
+  setIf('#lv-xp',    xp + ' XP earned');
+  setIf('#lv-next',  lv.next ? (lv.max - xp) + ' XP to ' + lv.next : '🏅 Max Level!');
+
+  const bar = qs('#lv-bar');
+  if(bar) bar.style.width = xpPct() + '%';
+
+  LEVELS.forEach((l, i) => {
+    const el = qs('#ms' + (i+1));
+    if(el) el.className = 'ms' + (xp >= l.min ? ' on' : '');
+  });
+
+  setIf('#wk-label', wk + ' / 42 pts this week');
+  setIf('#r-wkly',   wk);
+  setIf('#r-today',  pts);
+  setIf('#g-bonus',  S.bonusPts || 0);
+  setIf('#g-wkbonus', S.wkBonus || 0);
+
+  renderWeeklyGrid();
+  renderDashTasks();
+  renderAllTasks();
+  renderRewards();
+  renderHistory();
+  renderReadingLogs();
+  updateGuardianPanel();
+  updateLaptopStatus(wk, '#laptop-status-full');
+  updateLaptopStatus(wk, '#dash-laptop-status');
+
+  S.weeklyPts[todayIdx] = todayPts();
+  save();
+}
+
+// ──────────────────────────────────────────
+// WEEKLY GRID
+// ──────────────────────────────────────────
+function renderWeeklyGrid(){
+  const g = qs('#wk-grid');
+  if(!g) return;
+  g.innerHTML = '';
+  const max = 6;
+  S.weeklyPts.forEach((pts, i) => {
+    const isT = i === todayIdx;
+    const ok  = pts >= 4;
+    const h   = Math.min(36, Math.round((Math.min(pts, max) / max) * 36));
+    g.innerHTML += `<div class="dc${isT?' td':''}${ok?' ok':''}">
+      <div class="dn">${DAYS[i]}</div>
+      <div class="dp">${pts}</div>
+      <div class="dbar"><div class="dbf" style="height:${h}px"></div></div>
+    </div>`;
+  });
+}
+
+// ──────────────────────────────────────────
+// TASKS
+// ──────────────────────────────────────────
+function renderDashTasks(){
+  const g = qs('#dash-tasks');
+  if(!g) return;
+  g.innerHTML = '';
+  TASKS.forEach(t => {
+    const done = !!S.tasks[t.id];
+    g.innerHTML += `<div class="tc${done?' done':''}" onclick="toggleTask('${t.id}')">
+      <div class="tt"><div class="te">${t.emoji}</div><div class="tpt">+${t.pts}pt${t.pts>1?'s':''}</div></div>
+      <div class="tn">${t.name}</div>
+      <div class="td2">${t.desc}</div>
+      <div class="tb">
+        <div class="tck">${done?'✓':''}</div>
+        ${done ? '<div class="ts2">✅ Done!</div>' : '<div style="font-size:10px;color:var(--tx3)">tap to complete</div>'}
+      </div>
+    </div>`;
+  });
+}
+
+function renderAllTasks(){
+  const g = qs('#all-tasks');
+  if(!g) return;
+  g.innerHTML = '';
+  TASKS.forEach(t => {
+    const done = !!S.tasks[t.id];
+    g.innerHTML += `<div class="full-task${done?' done':''}" onclick="toggleTask('${t.id}')">
+      <div class="ft-em">${t.emoji}</div>
+      <div class="ft-info">
+        <div class="tn">${t.name}</div>
+        <div style="font-size:11px;color:var(--tx2)">${t.desc}</div>
+        <div class="ft-meta">
+          <span class="tpt">+${t.pts} pt${t.pts>1?'s':''}</span>
+          <span class="tag tag-pu">${t.cat}</span>
+          ${done ? '<span class="tag tag-gn">✓ Done</span>' : ''}
+        </div>
+      </div>
+      <div class="tck">${done?'✓':''}</div>
+    </div>`;
+  });
+}
+
+function toggleTask(id){
+  const t = TASKS.find(x => x.id === id);
+  if(!t) return;
+  if(!S.tasks[id]){
+    S.tasks[id]  = true;
+    S.totalXP    = (S.totalXP||0) + t.pts;
+    S.lastDate   = todayStr;
+    save(); updateUI();
+    launchConfetti();
+    playSound('complete');
+    showToast('✅ ' + t.name + ' done! +' + t.pts + ' pt' + (t.pts>1?'s':''));
+    if(doneTasks().length === TASKS.length){
+      setTimeout(() => { launchConfetti(); playSound('levelup'); showToast('🎉 ALL TASKS DONE! Incredible day!'); }, 900);
+    }
+  } else {
+    S.tasks[id] = false;
+    S.totalXP   = Math.max(0, (S.totalXP||0) - t.pts);
+    save(); updateUI();
+  }
+}
+
+function resetToday(){
+  if(!confirm("Reset today's tasks?")) return;
+  TASKS.forEach(t => {
+    if(S.tasks[t.id]){ S.totalXP = Math.max(0, (S.totalXP||0) - t.pts); }
+  });
+  S.tasks = {}; S.bonusPts = 0;
+  S.weeklyPts[todayIdx] = 0;
+  save(); updateUI();
+  showToast('↺ Day reset', 'warn');
+}
+
+// ──────────────────────────────────────────
+// REWARDS
+// ──────────────────────────────────────────
+function renderRewards(){
+  const el = qs('#rewards-list');
+  if(!el) return;
+  el.innerHTML = '';
+  const wk  = weeklyPts();
+  const pts = todayPts();
+  REWARDS.forEach(r => {
+    const score = r.type === 'today' ? pts : wk;
+    const ul = score >= r.req;
+    const pt = !ul && score >= Math.round(r.req * 0.65);
+    const st = ul ? 'ul' : pt ? 'pt' : 'lk';
+    const lbl = ul ? '🟢 Unlocked' : pt ? '🟡 Almost!' : '🔴 Locked';
+    el.innerHTML += `<div class="rw-item ${st}">
+      <div class="rw-icon">${r.emoji}</div>
+      <div class="rw-info">
+        <div class="rw-name">${r.name}</div>
+        <div class="rw-req">${r.desc} · ${r.req} ${r.type==='today'?'today':'weekly'} pts</div>
+      </div>
+      <div class="rw-badge ${st}">${lbl}</div>
+    </div>`;
+  });
+}
+
+function updateLaptopStatus(wk, sel){
+  const el = qs(sel);
+  if(!el) return;
+  if(wk >= 25){
+    el.className = 'laptop-status ls-full';
+    el.textContent = '💻 FULL ACCESS — Laptop unlocked · 2 days this week!';
+  } else if(wk >= 15){
+    el.className = 'laptop-status ls-part';
+    el.textContent = '💛 PARTIAL — 1 day max, 1 hour limit · ' + (25-wk) + ' pts to full access';
+  } else {
+    el.className = 'laptop-status ls-lock';
+    el.textContent = '🔴 LOCKED — Need ' + (15-wk) + ' more pts to unlock laptop time';
+  }
+}
+
+// ──────────────────────────────────────────
+// SMART INPUT (AI)
+// ──────────────────────────────────────────
+async function doSmartParse(){
+  const val = (qs('#si-input').value || '').trim();
+  if(!val){ showToast('Type something first!', 'warn'); return; }
+  const r = qs('#si-res');
+  r.innerHTML = '<div class="thinking"><div class="d"></div><div class="d"></div><div class="d"></div> <span style="font-size:12px;color:var(--tx3)">Parsing...</span></div>';
+  try{
+    const res = await callClaude(
+      `You parse a child's activity description and match it to a task. Respond ONLY with JSON:
+{"taskId":"<study|reading|exercise|behavior|chores|null>","confidence":"<high|medium|low>","explanation":"<1 sentence>"}
+Tasks: study=school subjects/math/science (+2pts), reading=books (+1pt), exercise=physical activity/sport (+1pt), behavior=being kind/helping (+1pt), chores=housework/cleaning (+1pt).`,
+      val, 150
+    );
+    const json = safeJSON(res);
+    if(json && json.taskId && json.taskId !== 'null'){
+      const t = TASKS.find(x => x.id === json.taskId);
+      if(S.tasks[json.taskId]){
+        r.innerHTML = `<span style="color:var(--am)">Already marked done: ${t?.name}</span>`;
+      } else {
+        r.innerHTML = `<span style="color:var(--gn)">✅ Matched: <strong>${t?.name}</strong></span> — ${json.explanation}
+          <button class="btn btn-gn btn-sm" style="margin-left:8px" onclick="toggleTask('${json.taskId}');qs('#si-input').value='';qs('#si-res').innerHTML=''">
+            Mark Done +${t?.pts}pt
+          </button>`;
+      }
+    } else {
+      r.innerHTML = `<span style="color:var(--rd)">No match found. Try: "I studied math" or "I did my chores"</span>`;
+    }
+  } catch(e){
+    r.innerHTML = `<span style="color:var(--rd)">Error — check your connection</span>`;
+  }
+}
+
+// ──────────────────────────────────────────
+// AI COACH
+// ──────────────────────────────────────────
+async function doAutoCoach(){
+  const el = qs('#coach-resp');
+  el.innerHTML = '<div class="thinking"><div class="d"></div><div class="d"></div><div class="d"></div> <span style="color:var(--tx3);font-size:12px">Analyzing your performance...</span></div>';
+  const dn  = doneTasks().map(t => t.name);
+  const mis = TASKS.filter(t => !S.tasks[t.id]).map(t => t.name);
+  try{
+    const res = await callClaude(
+      `You are a warm, encouraging AI coach for a child's discipline tracker. Analyze their data and give 3 specific, actionable tips. Respond ONLY as a JSON array: [{"icon":"<emoji>","message":"<1-2 sentences, specific and encouraging>"},...]. Be age-appropriate, positive, and practical.`,
+      `Done today: ${dn.join(', ')||'none yet'}. Missed: ${mis.join(', ')||'all done!'}. Weekly pts: ${weeklyPts()}. Streak: ${S.streak||0} days. Total XP: ${S.totalXP||0}. Readings logged: ${(S.readingLogs||[]).length}.`,
+      400
+    );
+    const arr = safeJSON(res);
+    if(Array.isArray(arr)){
+      el.innerHTML = arr.map(t => `<div class="tip"><div class="ti">${t.icon}</div><div>${t.message}</div></div>`).join('');
+    } else {
+      el.innerHTML = '<div style="color:var(--rd)">Could not generate coaching. Try again.</div>';
+    }
+  } catch(e){
+    el.innerHTML = '<div style="color:var(--rd)">Connection error — please retry.</div>';
+  }
+}
+
+async function doAskCoach(){
+  const q = (qs('#coach-q').value || '').trim();
+  if(!q){ showToast('Type a question first', 'warn'); return; }
+  doQuickPrompt(q);
+  qs('#coach-q').value = '';
+}
+
+async function doQuickPrompt(q){
+  const el = qs('#coach-resp');
+  el.innerHTML = '<div class="thinking"><div class="d"></div><div class="d"></div><div class="d"></div> <span style="color:var(--tx3);font-size:12px">Thinking...</span></div>';
+  try{
+    const res = await callClaude(
+      `You are a warm, encouraging AI coach for a child's growth tracker. Answer in 1-3 tips. Respond ONLY as JSON array: [{"icon":"<emoji>","message":"<1-2 sentences>"}]. Be concise, practical, positive.`,
+      q, 300
+    );
+    const arr = safeJSON(res);
+    if(Array.isArray(arr)){
+      el.innerHTML = arr.map(t => `<div class="tip"><div class="ti">${t.icon}</div><div>${t.message}</div></div>`).join('');
+    } else {
+      el.innerHTML = `<div class="tip"><div class="ti">💬</div><div>${res}</div></div>`;
+    }
+  } catch(e){
+    el.innerHTML = '<div style="color:var(--rd)">Connection error — please retry.</div>';
+  }
+}
+
+// ──────────────────────────────────────────
+// READING
+// ──────────────────────────────────────────
+async function doLogReading(){
+  const book  = (qs('#r-book').value || '').trim();
+  const pages = parseInt(qs('#r-pages').value) || 0;
+  const sum   = (qs('#r-summary').value || '').trim();
+  if(!book){ showToast('Enter a book title!', 'warn'); return; }
+  const entry = { book, pages, summary:sum, date:new Date().toLocaleDateString(), ts:Date.now() };
+  S.readingLogs = S.readingLogs || [];
+  S.readingLogs.unshift(entry);
+  save();
+  if(!S.tasks['reading']){ toggleTask('reading'); }
+  else { updateUI(); }
+  qs('#r-book').value = '';
+  qs('#r-pages').value = '';
+  qs('#r-summary').value = '';
+  qs('#r-eval').innerHTML = '';
+  showToast('📚 Reading logged! +1 pt');
+}
+
+async function doEvalSummary(){
+  const book = (qs('#r-book').value || '').trim();
+  const sum  = (qs('#r-summary').value || '').trim();
+  if(!sum || !book){ showToast('Fill in book and summary first!', 'warn'); return; }
+  const el = qs('#r-eval');
+  el.innerHTML = '<div class="thinking"><div class="d"></div><div class="d"></div><div class="d"></div> <span style="color:var(--tx3)">Evaluating...</span></div>';
+  try{
+    const res = await callClaude(
+      `Evaluate a child's book summary. Be encouraging. Respond ONLY as JSON: {"score":<1-10>,"grade":"<Excellent|Good|Needs Work>","feedback":"<1-2 encouraging sentences with one improvement tip>"}`,
+      `Book: "${book}". Summary: "${sum}"`, 200
+    );
+    const ev = safeJSON(res);
+    if(ev){
+      const cls = ev.score >= 7 ? 'good' : ev.score >= 5 ? 'ok' : 'low';
+      el.innerHTML = `<span class="rscore ${cls}">⭐ ${ev.score}/10 — ${ev.grade}</span> <span style="margin-left:6px">${ev.feedback}</span>`;
+    } else {
+      el.innerHTML = '<span style="color:var(--rd)">Could not evaluate. Try again.</span>';
+    }
+  } catch(e){
+    el.innerHTML = '<span style="color:var(--rd)">Error connecting to AI.</span>';
+  }
+}
+
+function renderReadingLogs(){
+  const el = qs('#r-logs');
+  if(!el) return;
+  const logs = S.readingLogs || [];
+  const el2 = qs('#r-total');
+  if(el2) el2.textContent = logs.length + ' sessions · ' + logs.reduce((s,r) => s + (r.pages||0), 0) + ' pages total';
+  if(!logs.length){
+    el.innerHTML = '<div class="empty">No sessions yet — log your first reading!</div>';
+    return;
+  }
+  el.innerHTML = logs.slice(0, 20).map(r => `
+    <div class="re-entry">
+      <div class="re-top">
+        <div class="re-book">📖 ${r.book}</div>
+        <div class="re-meta">${r.date}${r.pages ? ' · ' + r.pages + ' pages' : ''}</div>
+      </div>
+      ${r.summary ? `<div class="re-sum">${r.summary.slice(0,200)}${r.summary.length>200?'…':''}</div>` : ''}
+    </div>`).join('');
+}
+
+// ──────────────────────────────────────────
+// HISTORY
+// ──────────────────────────────────────────
+function saveHistory(){
+  const dn = doneTasks();
+  if(!dn.length) return;
+  const h = S.history || [];
+  const exists = h.find(x => x.date === todayStr);
+  if(!exists){
+    h.unshift({ date:todayStr, pts:todayPts(), tasks:dn.map(t=>t.id), xp:S.totalXP||0 });
+    S.history = h.slice(0, 60);
+    save();
+  }
+}
+
+function renderHistory(){
+  const el = qs('#hist-list');
+  if(!el) return;
+  const h = S.history || [];
+  if(!h.length){
+    el.innerHTML = '<div class="empty">No history yet — complete tasks to build your record!</div>';
+    return;
+  }
+  el.innerHTML = h.map(d => {
+    const doneIds = d.tasks || [];
+    const tags = TASKS.map(t => `<span class="hist-tag${doneIds.includes(t.id)?' done':''}">${t.emoji} ${t.name}</span>`).join('');
+    return `<div class="hist-entry">
+      <div class="hist-top">
+        <div class="hist-date">📅 ${d.date}</div>
+        <div class="hist-pts">${d.pts} pts earned</div>
+      </div>
+      <div class="hist-tasks">${tags}</div>
+    </div>`;
+  }).join('');
+}
+
+function clearHistory(){
+  if(!confirm('Clear all history?')) return;
+  S.history = [];
+  save();
+  renderHistory();
+  showToast('History cleared', 'warn');
+}
+
+// ──────────────────────────────────────────
+// GUARDIAN
+// ──────────────────────────────────────────
+function unlockGuardian(){
+  const pin = prompt('Enter guardian PIN (default: 1234):');
+  if(pin === '1234' || pin === null){
+    S.guardianOpen = true; save();
+    qs('#g-locked').style.display = 'none';
+    qs('#g-open').style.display = 'block';
+    qs('#g-toggle-btn').innerHTML = '🛡️ Guardian ✓';
+    qs('#g-toggle-btn').style.color = '#f97316';
+    updateGuardianPanel();
+  } else {
+    showToast('❌ Wrong PIN', 'err');
+  }
+}
+
+function lockGuardian(){
+  S.guardianOpen = false; save();
+  qs('#g-locked').style.display = 'block';
+  qs('#g-open').style.display = 'none';
+  qs('#g-toggle-btn').innerHTML = '🔒 Guardian';
+  qs('#g-toggle-btn').style.color = '';
+  showToast('🔒 Guardian locked');
+}
+
+function goGuardian(){
+  showTab('guardian', document.querySelector('[data-tab=guardian]'));
+}
+
+function updateGuardianPanel(){
+  const el = qs('#g-report');
+  if(!el) return;
+  const pts = todayPts();
+  const wk  = weeklyPts();
+  const dn  = doneTasks();
+  const mis = TASKS.filter(t => !S.tasks[t.id]);
+  el.innerHTML = `
+    <div class="rline">📊 <strong>Today:</strong> ${pts} pts · ${dn.length}/${TASKS.length} tasks</div>
+    <div class="rline">📅 <strong>Weekly:</strong> ${wk} / 42 target pts</div>
+    <div class="rline">🔥 <strong>Streak:</strong> ${S.streak||0} days in a row</div>
+    <div class="rline">⚡ <strong>Total XP:</strong> ${S.totalXP||0} · ${getLevel().name}</div>
+    <div class="rline">📚 <strong>Books read:</strong> ${(S.readingLogs||[]).length} sessions</div>
+    ${mis.length
+      ? `<div class="rline" style="color:var(--rd)">⚠️ <strong>Missed:</strong> ${mis.map(t=>t.name).join(', ')}</div>`
+      : `<div class="rline" style="color:var(--gn)">✅ All tasks completed today!</div>`
+    }`;
+}
+
+function adjBonus(d){
+  S.bonusPts = Math.max(0, (S.bonusPts||0) + d);
+  S.weeklyPts[todayIdx] = todayPts();
+  save(); updateUI();
+}
+
+function adjWkBonus(d){
+  S.wkBonus = Math.max(0, (S.wkBonus||0) + d);
+  save(); updateUI();
+}
+
+function doResetWeek(){
+  if(!confirm('Reset entire week? This cannot be undone.')) return;
+  TASKS.forEach(t => {
+    if(S.tasks[t.id]){ S.totalXP = Math.max(0, (S.totalXP||0) - TASKS.find(x=>x.id===t.id).pts); }
+  });
+  S.tasks = {}; S.weeklyPts = [0,0,0,0,0,0,0]; S.bonusPts = 0; S.wkBonus = 0;
+  save(); updateUI();
+  showToast('🔄 Week reset by guardian', 'warn');
+}
+
+function doApproveAll(){
+  TASKS.forEach(t => {
+    if(!S.tasks[t.id]){ S.tasks[t.id] = true; S.totalXP = (S.totalXP||0) + t.pts; }
+  });
+  S.weeklyPts[todayIdx] = todayPts();
+  save(); updateUI(); launchConfetti();
+  showToast('✅ All tasks approved!');
+}
+
+// ──────────────────────────────────────────
+// CONFETTI
+// ──────────────────────────────────────────
+function launchConfetti(){
+  const c = qs('#cfwrap');
+  c.innerHTML = '';
+  const cols = ['#a78bfa','#34d399','#fbbf24','#f87171','#60a5fa','#f472b6','#ffffff'];
+  for(let i = 0; i < 72; i++){
+    const p = document.createElement('div');
+    p.className = 'cp';
+    const size = 6 + Math.random() * 8;
+    p.style.cssText = `left:${Math.random()*100}%;top:-20px;width:${size}px;height:${size}px;background:${cols[Math.floor(Math.random()*cols.length)]};transform:rotate(${Math.random()*360}deg);animation:fall ${1.4+Math.random()*.8}s ${Math.random()*.5}s linear forwards`;
+    c.appendChild(p);
+    setTimeout(() => p.remove(), 2800);
+  }
+}
+
+// ──────────────────────────────────────────
+// SOUND
+// ──────────────────────────────────────────
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let actx;
+function playSound(type){
+  try{
+    if(!actx) actx = new AudioCtx();
+    const notes = type === 'complete' ? [523,659,784] : type === 'levelup' ? [523,659,784,1047] : [];
+    notes.forEach((freq, i) => {
+      const o = actx.createOscillator();
+      const g = actx.createGain();
+      o.connect(g); g.connect(actx.destination);
+      o.frequency.value = freq;
+      o.type = 'sine';
+      g.gain.setValueAtTime(0.15, actx.currentTime + i * 0.1);
+      g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + i * 0.1 + 0.2);
+      o.start(actx.currentTime + i * 0.1);
+      o.stop(actx.currentTime + i * 0.1 + 0.25);
+    });
+  } catch(e){}
+}
+
+// ──────────────────────────────────────────
+// TOAST
+// ──────────────────────────────────────────
+let _tt;
+function showToast(msg, type=''){
+  const old = qs('.toast');
+  if(old) old.remove();
+  const t = document.createElement('div');
+  t.className = 'toast' + (type ? ' ' + type : '');
+  t.textContent = msg;
+  document.body.appendChild(t);
+  clearTimeout(_tt);
+  _tt = setTimeout(() => t.remove(), 3200);
+}
+
+// ──────────────────────────────────────────
+// THEME
+// ──────────────────────────────────────────
+function toggleTheme(){
+  S.lightMode = !S.lightMode;
+  save();
+  applyTheme();
+  qs('#theme-btn').textContent = S.lightMode ? '🌙 Dark' : '☀️ Light';
+}
+
+function applyTheme(){
+  const r = document.documentElement.style;
+  if(S.lightMode){
+    r.setProperty('--bg',  '#f5f5fa'); r.setProperty('--bg2', '#ffffff');
+    r.setProperty('--bg3', '#f0f0f8'); r.setProperty('--bg4', '#e8e8f2');
+    r.setProperty('--bd',  '#dedee8'); r.setProperty('--bd2', '#cecee0');
+    r.setProperty('--tx',  '#1a1a2e'); r.setProperty('--tx2', '#4a4a6a'); r.setProperty('--tx3', '#8888aa');
+  } else {
+    r.setProperty('--bg',  '#0c0c12'); r.setProperty('--bg2', '#14141e');
+    r.setProperty('--bg3', '#1b1b27'); r.setProperty('--bg4', '#222230');
+    r.setProperty('--bd',  '#2a2a3a'); r.setProperty('--bd2', '#38384a');
+    r.setProperty('--tx',  '#eeeef5'); r.setProperty('--tx2', '#9898b0'); r.setProperty('--tx3', '#606078');
+  }
+}
+
+// ──────────────────────────────────────────
+// TAB NAVIGATION
+// ──────────────────────────────────────────
+function showTab(name, btn){
+  document.querySelectorAll('[id^="tab-"]').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.nt').forEach(b => b.classList.remove('on'));
+  const el = qs('#tab-' + name);
+  if(el) el.style.display = '';
+  if(btn) btn.classList.add('on');
+  if(name === 'guardian' && S.guardianOpen){
+    qs('#g-locked').style.display = 'none';
+    qs('#g-open').style.display   = 'block';
+  }
+  updateUI();
+}
+
+// ──────────────────────────────────────────
+// CLAUDE API
+// ──────────────────────────────────────────
+async function callClaude(system, user, maxTok = 300){
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: maxTok,
+      system,
+      messages: [{ role: 'user', content: user }]
+    })
+  });
+  const data = await res.json();
+  return data.content.map(i => i.text || '').join('');
+}
+
+function safeJSON(str){
+  try{ return JSON.parse(str.replace(/```json|```/g, '').trim()); }
+  catch(e){ return null; }
+}
+
+// ──────────────────────────────────────────
+// INIT
+// ──────────────────────────────────────────
+if(S.lightMode) applyTheme();
+if(S.guardianOpen){
+  qs('#g-toggle-btn').innerHTML = '🛡️ Guardian ✓';
+  qs('#g-toggle-btn').style.color = '#f97316';
+}
+updateUI();
+saveHistory();
+</script>
+</body>
+</html>
